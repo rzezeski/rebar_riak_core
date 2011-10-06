@@ -6,4 +6,3 @@ apps/{{appid}}/ebin
 dev/*
 doc/*
 rel/{{nodeid}}
-

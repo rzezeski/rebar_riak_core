@@ -9,7 +9,11 @@ Install [rebar](https://github.com/basho/rebar). You can do that via homebrew:
     brew update
     brew install rebar
 
-Drop these templates in `~/.rebar/templates/`, then:
+Drop these templates in `~/.rebar/templates/`:
+
+    cp riak* ~/.rebar/templates
+
+Then:
 
     mkdir myapp
     cd myapp
@@ -22,7 +26,7 @@ Integrate this app into your node's `rebar.config`:
 
     ...
     {deps, [
-          {riak_core, "0.14.*", {git, "git://github.com/basho/riak_core", {tag, "riak_core-0.14.1"}}},
+          {riak_core, "1.0.*", {git, "git://github.com/basho/riak_core", "1.0"}},
           {myapp, ".*", {git, "git@github.com:bij/myapp.git", "HEAD"}},
            ]}
     ...

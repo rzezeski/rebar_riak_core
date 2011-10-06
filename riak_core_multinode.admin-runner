@@ -16,7 +16,7 @@ if [ "$RUNNER_USER" -a "x$LOGNAME" != "x$RUNNER_USER" ]; then
         exit 1
     fi
     echo "Attempting to restart script through sudo -u $RUNNER_USER"
-    exec sudo -u $RUNNER_USER -i $RUNNER_SCRIPT_DIR/$RUNNER_SCRIPT $@
+    exec sudo -u $RUNNER_USER -i $RUNNER_SCRIPT_DIR/$RUNNER_SCRIPT "$@"
 fi
 
 # Make sure CWD is set to runner base dir
@@ -145,7 +145,7 @@ case "$1" in
                 continue
             fi
 
-            # Get the list of services that are available on the requested noe
+            # Get the list of services that are available on the requested node
             SERVICES=`$NODETOOL rpcterms riak_core_node_watcher services "'${TARGETNODE}'."`
             echo "$SERVICES" | grep "[[,]$SVC[],]" > /dev/null 2>&1
             if [ "X$?" = "X0" ]; then

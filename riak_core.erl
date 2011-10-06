@@ -8,7 +8,7 @@
 
 %% Public API
 
-% @doc Pings a random vnode to make sure communication is functional
+%% @doc Pings a random vnode to make sure communication is functional
 ping() ->
     DocIdx = riak_core_util:chash_key({<<"ping">>, term_to_binary(now())}),
     PrefList = riak_core_apl:get_primary_apl(DocIdx, 1, {{appid}}),

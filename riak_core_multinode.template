@@ -32,4 +32,4 @@
 {template, "riak_core_multinode.dev1.config", "rel/vars/dev1.config"}.
 {template, "riak_core_multinode.dev2.config", "rel/vars/dev2.config"}.
 {template, "riak_core_multinode.dev3.config", "rel/vars/dev3.config"}.
-
+{template, "riak_core_multinode.dev4.config", "rel/vars/dev4.config"}.

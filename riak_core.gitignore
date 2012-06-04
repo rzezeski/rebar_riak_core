@@ -4,3 +4,4 @@ deps/*
 ebin
 rel/{{appid}}
 dev
+apps/{{appid}}/src/*

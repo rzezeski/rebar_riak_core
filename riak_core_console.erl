@@ -1,4 +1,4 @@
-%% @doc Interface for {{nodeid}}-admin commands.
+%% @doc Interface for {{appid}}-admin commands.
 -module({{appid}}_console).
 -export([join/1,
          leave/1,

@@ -20,6 +20,10 @@ rel: all
 relclean:
 	rm -rf rel/{{appid}}
 
+stage : rel
+	$(foreach dep,$(wildcard deps/*), rm -rf rel/{{appid}}/lib/$(shell basename $(dep))-* && ln -sf $(abspath $(dep)) rel/{{appid}}/lib;)
+	$(foreach app,$(wildcard apps/*), rm -rf rel/{{appid}}/lib/$(shell basename $(app))-* && ln -sf $(abspath $(app)) rel/{{appid}}/lib;)
+
 devrel: all dev1 dev2 dev3
 
 dev1 dev2 dev3:
@@ -28,3 +32,4 @@ dev1 dev2 dev3:
 
 devclean:
 	rm -rf dev
+	

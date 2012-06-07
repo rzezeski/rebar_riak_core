@@ -42,10 +42,13 @@ Now shut it down:
 
     2> q().
 
-.. and lets test it using the cmdline:
+.. and lets test it using the cmdline, and test it via http request:
 
     ./rel/firstapp/bin/firstapp start
+    
     ./rel/firstapp/bin/firstapp ping
+    curl http://localhost:8098/firstapp/ping
+    
     ./rel/firstapp/bin/firstapp stop
 
 

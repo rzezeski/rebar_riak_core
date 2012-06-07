@@ -18,6 +18,9 @@ start(_StartType, _StartArgs) ->
             ok = riak_core_node_watcher_events:add_guarded_handler({{appid}}_node_event_handler, []),
             ok = riak_core_node_watcher:service_up({{appid}}, self()),
 
+            EntryRoute = {["{{appid}}", "ping"], {{appid}}_wm_ping, []},
+            webmachine_router:add_route(EntryRoute),
+
             {ok, Pid};
         {error, Reason} ->
             {error, Reason}

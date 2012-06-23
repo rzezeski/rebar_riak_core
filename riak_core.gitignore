@@ -1,7 +1,7 @@
 *.beam
 .eunit
 deps/*
-ebin
+ebin/*
 rel/{{appid}}
 dev
 apps/{{appid}}/src/*

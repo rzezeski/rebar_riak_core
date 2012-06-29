@@ -1,5 +1,5 @@
 %% @doc Interface for riak_searchng-admin commands.
--module(riak_searchng_console).
+-module({{appid}}_console).
 -export([join/1,
          leave/1,
          remove/1,

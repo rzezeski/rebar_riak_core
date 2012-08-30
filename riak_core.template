@@ -8,3 +8,11 @@
 {template, "riak_core.rebar.config", "rebar.config"}.
 {template, "riak_core.gitignore", ".gitignore"}.
 {template, "riak_core.md", "README.md"}.
+
+{template, "riak_core_entity_coverage_fsm.erl", "apps/{{appid}}/src/{{appid}}_coverage_fsm.erl"}.
+{template, "riak_core_entity_coverage_fsm_sup.erl", "apps/{{appid}}/src/{{appid}}_coverage_fsm_sup.erl"}.
+{template, "riak_core_entity_read_fsm.erl", "apps/{{appid}}/src/{{appid}}_read_fsm.erl"}.
+{template, "riak_core_entity_read_fsm_sup.erl", "apps/{{appid}}/src/{{appid}}_read_fsm_sup.erl"}.
+{template, "riak_core_entity_write_fsm.erl", "apps/{{appid}}/src/{{appid}}_write_fsm.erl"}.
+{template, "riak_core_entity_write_fsm_sup.erl", "apps/{{appid}}/src/{{appid}}_write_fsm_sup.erl"}.
+{template, "riak_core_obj.erl", "apps/{{appid}}/src/{{appid}}_obj.erl"}.

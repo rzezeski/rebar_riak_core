@@ -18,6 +18,9 @@ start_link() ->
 
 init([]) ->
     ReadFsm = {undefined,
-	       {{{appid}}_entity_coverage_fsm, start_link, []},
+	       {
+		 {{appid}}_entity_coverage_fsm, start_link, []},
 	       temporary, 5000, worker, [{{appid}}_entity_coverage_fsm]},
-    {ok, {{simple_one_for_one, 10, 10}, [ReadFsm]}}.
+    {ok, 
+     {
+       {simple_one_for_one, 10, 10}, [ReadFsm]}}.

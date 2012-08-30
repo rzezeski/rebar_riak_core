@@ -127,7 +127,8 @@ execute(timeout, SD0=#state{req_id=ReqId,
 
 %% Waiting for returns from coverage replies
 
-waiting({{undefined,{_Partition, _Node} = IdxNode},
+waiting({
+         {undefined,{_Partition, _Node} = IdxNode},
 	 {ok,ReqID,IdxNode,Obj}},
 	SD0=#state{num_r = NumR0, size=Size, from=From, replies=Replies0, r=R}) ->
     NumR = NumR0 + 1,

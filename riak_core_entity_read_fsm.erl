@@ -127,7 +127,7 @@ execute(timeout, SD0=#state{req_id=ReqId,
     {next_state, waiting, SD0}.
 
 %% @doc Wait for R replies and then respond to From (original client
-%% that called `{{appid}}:get/2').
+%% that called `get/2').
 %% TODO: read repair...or another blog post?
 
 waiting({ok, ReqID, IdxNode, Obj},

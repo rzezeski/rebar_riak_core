@@ -15,7 +15,10 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 init([]) ->
-    WriteFsm = {undefined,
-                {{{appid}}_entity_write_fsm, start_link, []},
+    WriteFsm = {undefined, 
+		{ 
+		  {{appid}}_entity_write_fsm, start_link, [] },
                 temporary, 5000, worker, [{{appid}}_entity_write_fsm]},
-    {ok, {{simple_one_for_one, 10, 10}, [WriteFsm]}}.
+    {ok, 
+     {
+       {simple_one_for_one, 10, 10}, [WriteFsm]}}.

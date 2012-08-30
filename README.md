@@ -41,3 +41,34 @@ function, which should return `{pong, Partition}`:
     {pong,753586781748746817198774991869333432010090217472}
 
 Hey, distributed unicorns!
+
+
+FSMs
+----
+
+Example usage of coverage, read and writ.
+
+* snarl\_user\_vnode is the name of the vnode
+* snarl_user is the bucket and also the service name.
+
+
+coverage:
+
+    snarl_entity_coverage_fsm:start(
+      {snarl_user_vnode, snarl_user},
+      list
+     ).
+
+read:
+
+    snarl_entity_read_fsm:start(
+      {snarl_user_vnode, snarl_user},
+      get, User
+     ).
+
+write:
+
+    snarl_entity_write_fsm:write(
+      {snarl_user_vnode, snarl_user}, 
+      User, Op, Val
+    ).

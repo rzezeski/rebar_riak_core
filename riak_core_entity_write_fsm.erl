@@ -32,6 +32,8 @@
                 from :: pid(),
 		entity :: string(),
                 op :: atom(),
+		w,
+		n,
 		vnode,
 		system,
                 cordinator :: node(),
@@ -76,7 +78,15 @@ mk_reqid() ->
 %% @doc Initialize the state data.
 init([{VNode, System}, ReqID, From, Entity, Op, Val]) ->
     ?PRINT({init, {VNode, System}, ReqID}),
+    {N, _R, W} = case application:get_key(System) of
+		     {ok, Res} ->
+			 Res;
+		     undefined ->
+			 {?N, ?R, ?W}
+		 end,
     SD = #state{req_id=ReqID,
+		n=N,
+		w=W,
                 from=From,
                 entity=Entity,
                 op=Op,
@@ -89,11 +99,12 @@ init([{VNode, System}, ReqID, From, Entity, Op, Val]) ->
 %% @doc Prepare the write by calculating the _preference list_.
 prepare(timeout, SD0=#state{
 		   entity=Entity,
-		   system=System
+		   system=System,
+		   n=N
 		  }) ->
     Bucket = list_to_binary(atom_to_list(System)),
     DocIdx = riak_core_util:chash_key({Bucket, term_to_binary(Entity)}),
-    Preflist = riak_core_apl:get_apl(DocIdx, ?N, System),
+    Preflist = riak_core_apl:get_apl(DocIdx, N, System),
     SD = SD0#state{preflist=Preflist},
     {next_state, execute, SD, 0}.
 
@@ -115,23 +126,23 @@ execute(timeout, SD0=#state{req_id=ReqID,
     {next_state, waiting, SD0}.
 
 %% @doc Wait for W write reqs to respond.
-waiting({ok, ReqID}, SD0=#state{from=From, num_w=NumW0, req_id=ReqID}) ->
+waiting({ok, ReqID}, SD0=#state{from=From, num_w=NumW0, req_id=ReqID, w=W}) ->
     NumW = NumW0 + 1,
     SD = SD0#state{num_w=NumW},
     lager:warning("Write(~p) ok", [NumW]),
     if
-        NumW =:= ?W ->
+        NumW =:= W ->
             From ! {ReqID, ok},
             {stop, normal, SD};
         true -> {next_state, waiting, SD}
     end;
 
-waiting({ok, ReqID, Reply}, SD0=#state{from=From, num_w=NumW0, req_id=ReqID}) ->
+waiting({ok, ReqID, Reply}, SD0=#state{from=From, num_w=NumW0, req_id=ReqID,w=W}) ->
     NumW = NumW0 + 1,
     SD = SD0#state{num_w=NumW},
     lager:warning("Write(~p) reply: ~p", [NumW, Reply]),
     if
-        NumW =:= ?W ->
+        NumW =:= W ->
             From ! {ReqID, ok, Reply},
             {stop, normal, SD};
         true -> {next_state, waiting, SD}
@@ -155,4 +166,3 @@ terminate(_Reason, _SN, _SD) ->
 %%%===================================================================
 %%% Internal Functions
 %%%===================================================================
-

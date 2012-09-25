@@ -129,7 +129,6 @@ execute(timeout, SD0=#state{req_id=ReqID,
 waiting({ok, ReqID}, SD0=#state{from=From, num_w=NumW0, req_id=ReqID, w=W}) ->
     NumW = NumW0 + 1,
     SD = SD0#state{num_w=NumW},
-    lager:warning("Write(~p) ok", [NumW]),
     if
         NumW =:= W ->
             From ! {ReqID, ok},
@@ -140,7 +139,6 @@ waiting({ok, ReqID}, SD0=#state{from=From, num_w=NumW0, req_id=ReqID, w=W}) ->
 waiting({ok, ReqID, Reply}, SD0=#state{from=From, num_w=NumW0, req_id=ReqID,w=W}) ->
     NumW = NumW0 + 1,
     SD = SD0#state{num_w=NumW},
-    lager:warning("Write(~p) reply: ~p", [NumW, Reply]),
     if
         NumW =:= W ->
             From ! {ReqID, ok, Reply},

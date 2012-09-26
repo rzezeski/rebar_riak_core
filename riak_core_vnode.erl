@@ -127,7 +127,7 @@ is_empty(State) ->
 	0 ->
 	    {true, State};
 	_ ->
-	    {true, State}
+	    {false, State}
     end.
 
 delete(State) ->

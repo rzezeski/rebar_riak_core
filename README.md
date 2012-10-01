@@ -8,7 +8,7 @@ Drop these templates into `~/.rebar/templates/`:
 
     cp riak* ~/.rebar/templates
 
-Verify Erlang installation (>= R14B04):
+Verify Erlang installation (>= R15B01):
 
     erl -version
 

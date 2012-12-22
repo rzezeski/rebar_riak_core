@@ -56,13 +56,13 @@ Now shut it down:
 devrel
 ----------
 
-Above we showed how to start a single node, but this isn't typically how other Riak Core based applications like Riak are tested.  Instead, there is something called a _devrel_ that allows one to easily set up a local 3-node cluster.
+Above we showed how to start a single node, but this isn't typically how other Riak Core based applications like Riak are tested.  Instead, there is something called a _devrel_ that allows one to easily set up a local `N`-node cluster. By defauly `N` is 4. You can change this by either editing the `Makefile` and changing `DEVNODES` to your prefered `N`, or by setting the variable `DEVNODES` before running the commands below.
 
 Build the dev-nodes:
 
     make devrel
 
-This did create 3 separate instances under the `dev/` dir; check it out:
+This did create 4 separate instances under the `dev/` dir; check it out:
 
     ls dev
 
@@ -74,9 +74,9 @@ Verify that the nodes are up and running:
 
     for d in dev/dev*; do $d/bin/firstapp ping; done
 
-You should see three `pong` replies.  At this point it is worth saying that you have three **INDIVIDUAL** firstapp nodes running.  They are **NOT** aware of each other yet. In order to form a cluster you have to _join_ the nodes. That has to be done only once. If a node, or the entire cluster, goes down it will remember the nodes it was connected to.
+You should see four `pong` replies.  At this point it is worth saying that you have four **INDIVIDUAL** firstapp nodes running.  They are **NOT** aware of each other yet. In order to form a cluster you have to _join_ the nodes. That has to be done only once. If a node, or the entire cluster, goes down it will remember the nodes it was connected to.
 
-    for d in dev/dev{2,3}; do $d/bin/firstapp-admin join firstapp1@127.0.0.1; done
+    for d in dev/dev{2,3,4}; do $d/bin/firstapp-admin join firstapp1@127.0.0.1; done
 
 Finally, to make sure they really all agree on the shape of the cluster you can ask if the _ring_ is "ready."
 
@@ -84,9 +84,9 @@ Finally, to make sure they really all agree on the shape of the cluster you can 
 
 Which returns something like:
 
-    TRUE All nodes agree on the ring ['firstapp1@127.0.0.1','firstapp2@127.0.0.1','firstapp3@127.0.0.1']
+    TRUE All nodes agree on the ring ['firstapp1@127.0.0.1','firstapp2@127.0.0.1','firstapp3@127.0.0.1'],'firstapp4@127.0.0.1']
 
-To verify you have a 3 node cluster and to see the distribution of the ring, run the `member_status` command:
+To verify you have a 4 node cluster and to see the distribution of the ring, run the `member_status` command:
 
     ./dev/dev1/bin/firstapp-admin member_status
 
@@ -95,14 +95,42 @@ Which returns:
     ================================= Membership ==================================
     Status     Ring    Pending    Node
     -------------------------------------------------------------------------------
-    valid      34.4%      --      'firstapp1@127.0.0.1'
-    valid      32.8%      --      'firstapp2@127.0.0.1'
-    valid      32.8%      --      'firstapp3@127.0.0.1'
+    valid      25.0%      --      'firstapp1@127.0.0.1'
+    valid      25.0%      --      'firstapp2@127.0.0.1'
+    valid      25.0%      --      'firstapp3@127.0.0.1'
+    valid      25.0%      --      'firstapp4@127.0.0.1'
     -------------------------------------------------------------------------------
-    Valid:3 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
+    Valid:4 / Leaving:0 / Exiting:0 / Joining:0 / Down:0
 
 Pretty cool!! Your riak-core cluster is up and running.
 
 And in case you want to stop all the nodes:
 
     for d in dev/dev*; do $d/bin/firstapp stop; done
+
+stage and stagedevrel
+----------
+
+For rapid, iterative development both `make rel` and `make devrel`
+have a `stage` counterpart. Running either:
+
+    make stage
+
+or
+
+    make stagedevrel
+
+will cause the `deps` and `apps` directories to be symlinked into the
+release(s) `lib` directory. This means you can edit your apps source
+code, recompile it, and load it on to the running node(s). You can
+either start mochiweb reloader
+
+    reloader:start().
+
+when attached to the node(s), which will cause any changes to be
+automatically reloaded. Or attach to a running node and run
+
+    `l(mod_name)`.
+
+to reload a specific module.
+

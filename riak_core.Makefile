@@ -24,12 +24,35 @@ stage : rel
 	$(foreach dep,$(wildcard deps/*), rm -rf rel/{{appid}}/lib/$(shell basename $(dep))-* && ln -sf $(abspath $(dep)) rel/{{appid}}/lib;)
 	$(foreach app,$(wildcard apps/*), rm -rf rel/{{appid}}/lib/$(shell basename $(app))-* && ln -sf $(abspath $(app)) rel/{{appid}}/lib;)
 
-devrel: all dev1 dev2 dev3
 
-dev1 dev2 dev3:
+##
+## Developer targets
+##
+##  devN - Make a dev build for node N
+##  stagedevN - Make a stage dev build for node N (symlink libraries)
+##  devrel - Make a dev build for 1..$DEVNODES
+##  stagedevrel Make a stagedev build for 1..$DEVNODES
+##
+##  Example, make a 68 node devrel cluster
+##    make stagedevrel DEVNODES=68
+
+.PHONY : stagedevrel devrel
+DEVNODES ?= 4
+
+# 'seq' is not available on all *BSD, so using an alternate in awk
+SEQ = $(shell awk 'BEGIN { for (i = 1; i < '$(DEVNODES)'; i++) printf("%i ", i); print i ;exit(0);}')
+
+$(eval stagedevrel : $(foreach n,$(SEQ),stagedev$(n)))
+$(eval devrel : $(foreach n,$(SEQ),dev$(n)))
+
+dev% : all
 	mkdir -p dev
-	(cd rel && ../rebar generate target_dir=../dev/$@ overlay_vars=vars/$@.config)
+	rel/gen_dev $@ rel/vars/dev_vars.config.src rel/vars/$@_vars.config
+	(cd rel && ../rebar generate target_dir=../dev/$@ overlay_vars=vars/$@_vars.config)
 
-devclean:
+stagedev% : dev%
+	  $(foreach dep,$(wildcard deps/*), rm -rf dev/$^/lib/$(shell basename $(dep))* && ln -sf $(abspath $(dep)) dev/$^/lib;)
+	  $(foreach app,$(wildcard apps/*), rm -rf dev/$^/lib/$(shell basename $(app))* && ln -sf $(abspath $(app)) dev/$^/lib;)
+
+devclean: clean
 	rm -rf dev
-	

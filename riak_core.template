@@ -11,6 +11,8 @@
 {dir, "rel"}.
 {template, "riak_core.reltool.config", "rel/reltool.config"}.
 {template, "riak_core.vars.config",    "rel/vars.config"}.
+{template, "riak_core.gen_dev",        "rel/gen_dev"}.
+{chmod, 8#744,                         "rel/gen_dev"}.
 
 {dir, "rel/files"}.
 {file, "riak_core.app.config",       "rel/files/app.config"}.
@@ -25,10 +27,7 @@
 {file, "riak_core.vm.args",          "rel/files/vm.args"}.
 
 {dir, "rel/vars"}.
-{template, "riak_core.dev1.config", "rel/vars/dev1.config"}.
-{template, "riak_core.dev2.config", "rel/vars/dev2.config"}.
-{template, "riak_core.dev3.config", "rel/vars/dev3.config"}.
-
+{template, "riak_core.dev_vars.config.src", "rel/vars/dev_vars.config.src"}.
 
 %% ./src
 {dir, "src"}.

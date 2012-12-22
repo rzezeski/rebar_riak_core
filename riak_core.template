@@ -1,10 +1,50 @@
 {variables, [{appid, "myapp"}]}.
-{template, "riak_core.app.src", "src/{{appid}}.app.src"}.
-{template, "riak_core_app.erl", "src/{{appid}}_app.erl"}.
-{template, "riak_core.erl", "src/{{appid}}.erl"}.
-{template, "riak_core.hrl", "src/{{appid}}.hrl"}.
-{template, "riak_core_sup.erl", "src/{{appid}}_sup.erl"}.
-{template, "riak_core_vnode.erl", "src/{{appid}}_vnode.erl"}.
+
+
+%% .
+{template, "riak_core.gitignore",    ".gitignore"}.
+{template, "riak_core.Makefile",     "Makefile"}.
+{template, "riak_core.md",           "README.md"}.
 {template, "riak_core.rebar.config", "rebar.config"}.
-{template, "riak_core.gitignore", ".gitignore"}.
-{template, "riak_core.md", "README.md"}.
+
+%% ./rel
+{dir, "rel"}.
+{template, "riak_core.reltool.config", "rel/reltool.config"}.
+{template, "riak_core.vars.config",    "rel/vars.config"}.
+{template, "riak_core.gen_dev",        "rel/gen_dev"}.
+{chmod, 8#744,                         "rel/gen_dev"}.
+
+{dir, "rel/files"}.
+{file, "riak_core.app.config",       "rel/files/app.config"}.
+{file, "riak_core.erl.script",       "rel/files/erl"}.
+{chmod, 8#744,                       "rel/files/erl"}.
+{file, "riak_core.runner",           "rel/files/{{appid}}"}.
+{chmod, 8#744,                       "rel/files/{{appid}}"}.
+{template, "riak_core.admin-runner", "rel/files/{{appid}}-admin"}.
+{chmod, 8#744,                       "rel/files/{{appid}}-admin"}.
+{file, "riak_core.nodetool",         "rel/files/nodetool"}.
+{chmod, 8#744,                       "rel/files/nodetool"}.
+{file, "riak_core.vm.args",          "rel/files/vm.args"}.
+
+{dir, "rel/vars"}.
+{template, "riak_core.dev_vars.config.src", "rel/vars/dev_vars.config.src"}.
+
+%% ./src
+{dir, "src"}.
+{template, "riak_core_app.erl",                "src/{{appid}}_app.erl"}.
+{template, "riak_core_console.erl",            "src/{{appid}}_console.erl"}.
+{template, "riak_core_node_event_handler.erl", "src/{{appid}}_node_event_handler.erl"}.
+{template, "riak_core_ring_event_handler.erl", "src/{{appid}}_ring_event_handler.erl"}.
+{template, "riak_core_sup.erl",                "src/{{appid}}_sup.erl"}.
+{template, "riak_core_vnode.erl",              "src/{{appid}}_vnode.erl"}.
+{template, "riak_core_wm_ping.erl",            "src/{{appid}}_wm_ping.erl"}.
+
+{template, "riak_core.app.src",                "src/{{appid}}.app.src"}.
+{template, "riak_core.erl",                    "src/{{appid}}.erl"}.
+{template, "riak_core.hrl",                    "src/{{appid}}.hrl"}.
+
+
+%% ./apps
+{dir, "apps/{{appid}}"}.
+{symlink, "../../src",  "apps/{{appid}}/src"}.
+{symlink, "../../ebin", "apps/{{appid}}/ebin"}.

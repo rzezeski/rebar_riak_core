@@ -139,27 +139,27 @@ FSMs
 
 Example usage of coverage, read and writ.
 
-* snarl\_user\_vnode is the name of the vnode
-* snarl_user is the bucket and also the service name.
+* firstapp_vnode is the name of the vnode
+* firstapp is the bucket and also the service name.
 
 
 coverage:
 
-    snarl_entity_coverage_fsm:start(
-      {snarl_user_vnode, snarl_user},
+    firstapp_entity_coverage_fsm:start(
+      {firstapp_vnode, firstapp},
       list
      ).
 
 read:
 
-    snarl_entity_read_fsm:start(
-      {snarl_user_vnode, snarl_user},
-      get, User
+    firstapp_entity_read_fsm:start(
+      {firstapp_vnode, firstapp},
+      get, Key
      ).
 
 write:
 
-    snarl_entity_write_fsm:write(
-      {snarl_user_vnode, snarl_user}, 
-      User, Op, Val
+    firstapp_entity_write_fsm:write(
+      {firstapp_vnode, firstapp},
+      Key, Op, Val
     ).

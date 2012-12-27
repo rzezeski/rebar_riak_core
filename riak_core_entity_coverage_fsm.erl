@@ -26,7 +26,8 @@
               start_link/6,
               terminate/3,
               waiting/2,
-              start/3
+              start/3,
+              start/4
              ]).
 
 -record(state, {req_id,

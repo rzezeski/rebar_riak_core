@@ -16,6 +16,7 @@
 -export([prepare/2, execute/2, waiting/2]).
 
 -ignore_xref([
+              write/3,
               code_change/4,
               execute/2,
               handle_event/3,

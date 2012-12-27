@@ -9,6 +9,13 @@
 	 list/0
         ]).
 
+-ignore_xref([
+              ping/0,
+              get/1,
+	      set/2,
+	      list/0
+             ]).
+
 %% Public API
 
 %% @doc Pings a random vnode to make sure communication is functional

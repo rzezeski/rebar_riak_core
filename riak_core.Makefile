@@ -21,7 +21,7 @@ rel: all
 relclean:
 	rm -rf rel/{{appid}}
 
-xref:
+xref: all
 	$(REBAR) skip_deps=true xref
 
 stage : rel

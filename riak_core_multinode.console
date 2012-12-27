@@ -5,6 +5,13 @@
          remove/1,
          ringready/1]).
 
+-ignore_xref([
+              join/1,
+              leave/1,
+              remove/1,
+              ringready/1
+             ]).
+
 join([NodeStr]) ->
     try riak_core:join(NodeStr) of
         ok ->

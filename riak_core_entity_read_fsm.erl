@@ -18,6 +18,28 @@
 %% States
 -export([prepare/2, execute/2, waiting/2, wait_for_n/2, finalize/2]).
 
+-ignore_xref([
+              code_change/4,
+              different/1,
+              execute/2,
+              finalize/2,
+              handle_event/3,
+              handle_info/3,
+              handle_sync_event/4,
+              init/1,
+              needs_repair/2,
+              prepare/2,
+              reconcile/1,
+              repair/4,
+              start/2,
+              start/4,
+              start_link/6,
+              terminate/3,
+              unique/1,
+              wait_for_n/2,
+              waiting/2
+             ]).
+
 -record(state, {req_id,
                 from,
 		entity,
@@ -52,9 +74,9 @@ start(VNodeInfo, Op, User, Val) ->
       [ReqID, VNodeInfo, Op, self(), User, Val]
      ),
     receive
-	{ReqID, ok} -> 
+	{ReqID, ok} ->
 	    ok;
-        {ReqID, ok, Result} -> 
+        {ReqID, ok, Result} ->
 	    {ok, Result}
     after ?DEFAULT_TIMEOUT ->
 	    {error, timeout}
@@ -91,10 +113,9 @@ init([ReqId, {VNode, System}, Op, From, Entity, Val]) ->
     {ok, prepare, SD, 0}.
 
 %% @doc Calculate the Preflist.
-prepare(timeout, SD0=#state{entity=Entity, 
+prepare(timeout, SD0=#state{entity=Entity,
 			    system=System,
 			    n=N}) ->
-    
     Bucket = list_to_binary(atom_to_list(System)),
     DocIdx = riak_core_util:chash_key({Bucket, term_to_binary(Entity)}),
     Prelist = riak_core_apl:get_apl(DocIdx, N, System),
@@ -117,7 +138,6 @@ execute(timeout, SD0=#state{req_id=ReqId,
 		undefined ->
 		    VNode:Op(Prelist, ReqId, Entity);
 		_ ->
-		    
 		    VNode:Op(Prelist, ReqId, Entity, Val)
 	    end
     end,
@@ -142,13 +162,13 @@ waiting({ok, ReqID, IdxNode, Obj},
 		    Reply = {{appid}}_obj:val(Merged),
 		    From ! {ReqID, ok, statebox:value(Reply)}
 	    end,
-	    if 
-		NumR =:= N -> 
+	    if
+		NumR =:= N ->
 		    {next_state, finalize, SD, 0};
-	       true -> 
+	       true ->
 		    {next_state, wait_for_n, SD, Timeout}
 	    end;
-        true -> 
+        true ->
 	    {next_state, waiting, SD}
     end.
 
@@ -169,7 +189,7 @@ wait_for_n(timeout, SD) ->
 
 finalize(timeout, SD=#state{
 		    vnode=VNode,
-		    replies=Replies, 
+		    replies=Replies,
 		    entity=Entity}) ->
     MObj = merge(Replies),
     case needs_repair(MObj, Replies) of
@@ -211,7 +231,7 @@ merge(Replies) ->
 %% @doc Reconcile conflicts among conflicting values.
 -spec reconcile([A :: statebox:statebox()]) -> A :: statebox:statebox().
 
-reconcile(Vals) -> 
+reconcile(Vals) ->
     statebox:merge(Vals).
 
 
@@ -248,5 +268,5 @@ repair(VNode, StatName, MObj, [{IdxNode,Obj}|T]) ->
 unique(L) ->
     sets:to_list(sets:from_list(L)).
 
-mk_reqid() -> 
+mk_reqid() ->
     erlang:phash2(erlang:now()).

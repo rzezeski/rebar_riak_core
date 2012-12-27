@@ -15,6 +15,21 @@
 %% States
 -export([prepare/2, execute/2, waiting/2]).
 
+-ignore_xref([
+              code_change/4,
+              execute/2,
+              handle_event/3,
+              handle_info/3,
+              handle_sync_event/4,
+              init/1,
+              mk_reqid/0,
+              prepare/2,
+              start_link/5,
+              start_link/6,
+              terminate/3,
+              waiting/2
+             ]).
+
 %% req_id: The request id so the caller can verify the response.
 %%
 %% from: The pid of the sender so a reply can be made.
@@ -58,17 +73,17 @@ write({VNode, System}, User, Op, Val) ->
     ReqID = mk_reqid(),
     {{appid}}_entity_write_fsm_sup:start_write_fsm([{VNode, System}, ReqID, self(), User, Op, Val]),
     receive
-	{ReqID, ok} -> 
+	{ReqID, ok} ->
 	    ok;
-        {ReqID, ok, Result} -> 
+        {ReqID, ok, Result} ->
 	    {ok, Result};
-	Other -> 
+	Other ->
 	    ?PRINT({yuck, Other})
     after ?DEFAULT_TIMEOUT ->
 	    {error, timeout}
     end.
 
-mk_reqid() -> 
+mk_reqid() ->
     erlang:phash2(erlang:now()).
 
 %%%===================================================================
@@ -155,7 +170,7 @@ handle_event(_Event, _StateName, StateData) ->
 handle_sync_event(_Event, _From, _StateName, StateData) ->
     {stop,badmsg,StateData}.
 
-code_change(_OldVsn, StateName, State, _Extra) -> 
+code_change(_OldVsn, StateName, State, _Extra) ->
     {ok, StateName, State}.
 
 terminate(_Reason, _SN, _SD) ->

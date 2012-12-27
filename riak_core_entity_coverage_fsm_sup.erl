@@ -9,6 +9,9 @@
 
 -export([init/1]).
 
+-ignore_xref([init/1,
+	      start_link/0]).
+
 start_read_fsm(Args) ->
     ?PRINT({start_coverage_fsm, Args}),
     supervisor:start_child(?MODULE, Args).
@@ -21,6 +24,6 @@ init([]) ->
 	       {
 		 {{appid}}_entity_coverage_fsm, start_link, []},
 	       temporary, 5000, worker, [{{appid}}_entity_coverage_fsm]},
-    {ok, 
+    {ok,
      {
        {simple_one_for_one, 10, 10}, [ReadFsm]}}.

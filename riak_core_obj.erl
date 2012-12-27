@@ -3,13 +3,20 @@
 %%
 %% TODO Possibly move type/record defs in there and use accessor funs
 %% and opaque types.
-%% 
+%%
 %% Taken form https://github.com/Licenser/try-try-try/blob/master/2011/riak-core-conflict-resolution/rts/src/rts_obj.erl
 
 -module({{appid}}_obj).
 -export([ancestors/1, children/1, equal/1, equal/2, merge/2, unique/1,
          update/3]).
 -export([val/1, vclock/1]).
+
+-ignore_xref([
+              ancestors/1,
+              equal/1,
+              unique/1,
+              vclock/1
+             ]).
 
 -include("{{appid}}.hrl").
 

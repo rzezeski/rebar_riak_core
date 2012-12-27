@@ -20,7 +20,13 @@
          handle_coverage/4,
          handle_exit/3]).
 
--export([get/3, list/2, set/4]).
+-export([]).
+
+
+-ignore_xref([
+	      start_vnode/1,
+	      get/3, list/2, set/4
+             ]).
 
 -record(state, {partition,
 		node,

@@ -32,17 +32,17 @@
 
 -record(state, {req_id,
                 from,
-		entity,
-		op,
-		r,
-		n,
+                entity,
+                op,
+                r,
+                n,
                 preflist,
                 num_r=0,
-		size,
-		timeout=?DEFAULT_TIMEOUT,
-		val,
-		vnode,
-		system,
+                size,
+                timeout=?DEFAULT_TIMEOUT,
+                val,
+                vnode,
+                system,
                 replies=[]}).
 
 %%%===================================================================
@@ -61,15 +61,15 @@ start(VNodeInfo, Op, User) ->
 start(VNodeInfo, Op, User, Val) ->
     ReqID = mk_reqid(),
     {{appid}}_entity_coverage_fsm_sup:start_read_fsm(
-      [ReqID, VNodeInfo, Op, self(), User, Val]
-     ),
+               [ReqID, VNodeInfo, Op, self(), User, Val]
+              ),
     receive
-	{ReqID, ok} ->
-	    ok;
+        {ReqID, ok} ->
+            ok;
         {ReqID, ok, Result} ->
-	    {ok, Result}
+            {ok, Result}
     after ?DEFAULT_TIMEOUT ->
-	    {error, timeout}
+            {error, timeout}
     end.
 
 %%%===================================================================
@@ -86,30 +86,30 @@ init([ReqId, {VNode, System}, Op, From, Entity]) ->
 init([ReqId, {VNode, System}, Op, From, Entity, Val]) ->
     ?PRINT({init, [Op, ReqId, From, Entity, Val]}),
     {N, R, _W} = case application:get_key(System) of
-		     {ok, Res} ->
-			 Res;
-		     undefined ->
-			 {?N, ?R, ?W}
-		 end,
+                     {ok, Res} ->
+                         Res;
+                     undefined ->
+                         {?N, ?R, ?W}
+                 end,
     SD = #state{req_id=ReqId,
                 from=From,
-		op=Op,
-		val=Val,
-		r=R,
-		n=N,
-		vnode=VNode,
-		system=System,
+                op=Op,
+                val=Val,
+                r=R,
+                n=N,
+                vnode=VNode,
+                system=System,
                 entity=Entity},
     {ok, prepare, SD, 0}.
 
 %% @doc Calculate the Preflist.
 prepare(timeout, SD0=#state{system=System,
-			    n=N,
-			    req_id=ReqId}) ->
+                            n=N,
+                            req_id=ReqId}) ->
     PVC = N,
     {Nodes, _Other} =
-	riak_core_coverage_plan:create_plan(
-	  all, N, PVC, ReqId, System),
+        riak_core_coverage_plan:create_plan(
+          allup, N, PVC, ReqId, System),
     {ok, CHash} = riak_core_ring_manager:get_my_ring(),
     {Num, _} = riak_core_ring:chash(CHash),
     SD = SD0#state{preflist=Nodes, size=Num},
@@ -118,21 +118,21 @@ prepare(timeout, SD0=#state{system=System,
 %% @doc Execute the get reqs.
 execute(timeout, SD0=#state{req_id=ReqId,
                             entity=Entity,
-			    op=Op,
-			    val=Val,
-			    vnode=VNode,
+                            op=Op,
+                            val=Val,
+                            vnode=VNode,
                             preflist=Prelist}) ->
     ?PRINT({execute, Entity, Val}),
     case Entity of
-	undefined ->
-	    VNode:Op(Prelist, ReqId);
-	_ ->
-	    case Val of
-		undefined ->
-		    VNode:Op(Prelist, ReqId, Entity);
-		_ ->
-		    VNode:Op(Prelist, ReqId, Entity, Val)
-	    end
+        undefined ->
+            VNode:Op(Prelist, ReqId);
+        _ ->
+            case Val of
+                undefined ->
+                    VNode:Op(Prelist, ReqId, Entity);
+                _ ->
+                    VNode:Op(Prelist, ReqId, Entity, Val)
+            end
     end,
     {next_state, waiting, SD0}.
 

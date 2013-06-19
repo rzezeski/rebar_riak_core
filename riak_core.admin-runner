@@ -164,7 +164,7 @@ case "$1" in
         ;;
 
     *)
-        echo "Usage: $SCRIPT { join | leave | reip | ringready | remove |"
+        echo "Usage: $SCRIPT { join | leave | ringready | remove |"
         echo "                 services | wait-for-service | member_status |"
         echo "                 ring_status }"
         exit 1
